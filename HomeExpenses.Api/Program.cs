@@ -1,10 +1,14 @@
 using HomeExpenses.Api.Data;
 using HomeExpenses.Api.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+// The frontend sends transaction types as "Income" and "Expense".
+// This converter lets ASP.NET Core deserialize those enum names correctly.
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
